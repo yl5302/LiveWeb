@@ -1,0 +1,93 @@
+<html>
+
+<head>
+  <title>Self Portrait</title>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+    var socket = io.connect();
+
+    socket.on('connect', function() {
+      console.log("Connected");
+    });
+
+    // Receive from any event
+    socket.on('chatmessage', function(data) {
+      console.log(data);
+      document.getElementById('messages').innerHTML = "" + data +
+        +"" + document.getElementById('messages').innerHTML;
+    });
+
+    var sendmessage = function(message) {
+      console.log("chatmessage: " + message);
+      socket.emit('chatmessage', message);
+    };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/addons/p5.dom.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/addons/p5.sound.min.js"></script>
+  <script src="https://cdn.rawgit.com/v21/tracery/master/tracery.js"></script>
+  <script src="./speakClient.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+
+<body>
+  <header>
+    <h3>Terrific Story Teller</h3>
+  </header>
+
+  <section>
+    <nav>
+      <ul>
+        <li><a href="#">Me</a></li>
+        <li><a href="#">Myself</a></li>
+        <li><a href="#">I</a></li>
+      </ul>
+
+    </nav>
+
+    <article>
+      <h2>Hello.</h2>
+      <p>I like to be in places where I shouldn't be.</p>
+      <p>Press arrow keys to view my story.</p>
+
+      <br><br><br><br>
+
+      <div style="color:white;background-color: black;">
+        <p>Left:Backwards &nbsp &nbsp Right:Forwards &nbsp &nbsp Up:Fast Backwards &nbsp &nbsp Down:Fast Forwards</p>
+      </div>
+
+            <iframe width="100%" height="560" src="https://www.youtube.com/embed/r0LSzZSuBl0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+      <br><br><br><br>
+      <p>I like to tell stories of others too.<br>I'm telling you one now.</p>
+
+      <div id="audio"></div>
+
+      <div id="click">
+        <br>
+        <button id ="myBtn" type="button"; class='button' onclick="changeText()">Click to generate</button>
+      </div>
+      <br>
+
+      <div id=outputDiv style="float: left; padding:10px;">
+        <script src="./sketch.js"></script>
+        <br>
+      </div>
+
+      <div id=messageBox style="float: left; width:100%;">
+        <br><br>
+        <p>Tell me about your story!</p>
+        <input type="text" id="message" name="message" style="float: left; width:100%; height:60">
+        <input type="submit" value="submit" onclick="sendmessage(document.getElementById('message').value);">
+        <br><br>
+      </div>
+      <br>
+
+    </article>
+  </section>
+
+</body>
+
+</html>
