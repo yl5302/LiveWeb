@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Draw</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css" />
+  <script src="socket.io/socket.io.js"></script>
+  <script src="sketch.js"></script>
+
+</head>
+
+<body>
+  <br>
+  <header class='header'; style="margin:50px">
+    <h3>Welcome To The Message Board!</h3>
+    <p style="font-size: 18px">Draw on the left canvas and publish your drawing to the right.</p>
+  </header>
+
+  <div id="click" ; style="margin:50px">
+    <button id ="clearButton" type="button"; class='button'; style="padding:10px 30px">Clear</button>
+    <button id ="publishButton" type="button"; class='button'; style="padding:10px 30px">Publish</button>
+  </div>
+
+  <div id="content", style="margin:50px">
+  <canvas id="drawing" style="background-color:LightSlateGrey;"></canvas>
+  <canvas id="displaying" style="background-color:LightSteelBlue;"></canvas>
+  </div>
+
+</html>
