@@ -1,0 +1,90 @@
+<html>
+<style>
+  html {
+    font-family: Impact;
+    text-align: center;
+    background: url(https://media1.giphy.com/media/88tRLygiOoa76/giphy.gif?cid=3640f6095be212ec2e74323636e4ed24) no-repeat center center fixed;
+    background-size: cover
+  }
+
+  img {
+    display: block;
+    margin: auto;
+  }
+  #title {
+    font-size: 4em;
+  }
+
+  h1 {
+    font-weight: 600;
+    color: darkblue;
+  }
+  h2 {
+    font-size:200;
+    font-weight: 400;
+    color: darkblue;
+  }
+
+  .glow {
+    /* color: rgba(0,0,0,0.5); */
+    animation: glow 0.5s ease-in-out infinite alternate;
+  }
+
+  @-webkit-keyframes glow {
+    from {
+      text-shadow: 0 0 2px rgba(150,150,255,0.33), 0 0 2px rgba(150,150,255,0.33), 0 0 2px rgba(150,150,255,0.33), 0 0 2px rgba(150,150,255,0.33), 0 0 2px rgba(150,150,255,0.33), 0 0 2px rgba(150,150,255,0.33), 0 0 2px rgba(150,150,255,0.33);
+    }
+    to {
+      text-shadow: 0 0 20px rgba(150,150,255,0.33), 0 0 20px rgba(150,150,255,0.33), 0 0 20px rgba(150,150,255,0.33), 0 0 20px rgba(150,150,255,0.33), 0 0 20px rgba(150,150,255,0.33), 0 0 20px rgba(150,150,255,0.33), 0 0 20px rgba(150,150,255,0.33);
+    }
+  }
+
+  input {
+    background: rgba(255,255,255, 0.5);
+    color: darkblue;
+    border-color: darkblue !important;
+    padding: 0.5em 1em;
+    border: 2px solid darkblue !important;
+    font-size 1.25em;
+    outline: none;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+</style>
+
+  <head>
+  <script src="/socket.io/socket.io.js"></script>
+  </head>
+      <body>
+<h1 class="glow" style="margin-top: 100px; text-align:center;font-family:Tahoma;">LET'S MAKE SOME NOISE!<br/>
+
+
+        <form style="font-family:Trebuchet MS;">
+          <b>Make Music With Your ...</b><br/>
+          <a class="button glow" href="index.html"><input class="glow" type='button' name='test' value='Head' onClick="state1()"></a>
+          <a class="button glow" href="index.html"><input class="glow" type='button' name='test' value='Hands' onClick="state2()"></a>
+          <a class="button glow" href="index.html"><input class="glow" type='button' name='test' value='Body' onClick="state3()"></a>
+        </form>
+        <img width="150px" src="http://files.57gif.com/webgif/0/d/68/fb1a0c1d8f3feb5fa68f5004f5113.gif"/>
+        <marquee >Let's Make some Music Together!!</marquee>
+
+
+        <script>
+
+          function state1(){
+            localStorage.setItem('state', '1');
+          }
+
+          function state2(){
+            localStorage.setItem('state', '2');
+          }
+
+          function state3(){
+            localStorage.setItem('state', '3');
+          }
+
+        </script>
+      </body>
+
+ </html>

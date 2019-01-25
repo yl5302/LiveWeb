@@ -1,0 +1,261 @@
+
+<!--
+ Copyright (c) 2018 ml5
+
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PoseNet example using p5.js</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js"></script>
+  <script src="https://unpkg.com/ml5@0.1.2/dist/ml5.min.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.js" charset="utf-8"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="peer.min.js"></script>
+  <script src="Tone.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <script type = "text/javascript">
+    var socket = null;
+    /* Get User Media */
+    let my_stream = null;
+
+    let stream1 = null;
+    let stream2 = null;
+
+    var peer_id = null;
+
+    var peer = null;
+
+    let peerArrayID = [];
+
+    let constraints = { audio: false, video: true }
+
+    window.addEventListener('load', function() {
+    // Prompt the user for permission, get the stream
+    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+      /* Use the stream */
+
+      // Attach to our video object
+      var videoElement = document.getElementById('video1');
+      videoElement.srcObject = stream;
+      videoElement.style.display = "none";
+
+      var videoElement2 = document.getElementById('video2');
+      videoElement2.srcObject = stream;
+      videoElement2.style.display = "none";
+
+      // Global for stream
+      my_stream = stream;
+
+      // Wait for the stream to load enough to play
+      videoElement.onloadedmetadata = function(e) {
+        videoElement.play();
+      };
+
+      videoElement2.onloadedmetadata = function(e) {
+        videoElement2.play();
+      };
+
+      connectPeer();
+    })
+    .catch(function(err) {
+      /* Handle the error */
+      alert(err);
+    });
+    });
+
+    let countPeer = 0;
+
+
+
+    function connectPeer(){
+
+      //get peer server
+      peer = new Peer({host: 'liveweb-new.itp.io', port: 9000, path: '/'});
+
+      //connect
+      peer.on('open', function(id) {
+        console.log('My peer ID is: ' + id);
+        peer_id = id;
+        peerArrayID[0] = id;
+        peerArrayID[1] = id;
+
+        //open socket
+        socket = io.connect();
+        socket.on('connect', function() {
+          console.log("connect");
+
+          //emit my peer id to everyone including myself
+          socket.emit('peerid',peer_id);
+
+          socket.on('playSound',function(data){
+            document.getElementById(data).play();
+            console.log(data);
+          })
+        });
+
+        socket.on('peerid',function(data) {
+          countPeer++;
+          console.log("others");
+          if(countPeer%2 == 0){
+            peerArrayID[0] = data;
+            console.log("call 0");
+            makeCall(peerArrayID[0],1);
+          }else{
+            peerArrayID[1] = data;
+            console.log("call 1");
+            makeCall(peerArrayID[1],2);
+          }
+
+
+        });
+      });
+
+
+
+      peer.on('error', function(err) {
+        console.log(err);
+      });
+
+      //another peer emit call event
+      peer.on('call', function(incoming_call) {
+        console.log("Got a call!");
+        console.log(incoming_call);
+        incoming_call.answer(my_stream); // Answer the call with our stream from getUserMedia
+
+        //receive incoming call
+        incoming_call.on('stream', function(remoteStream) {  // we receive a getUserMedia stream from the remote caller
+          // And attach it to a video object
+
+        });
+      });
+
+
+
+      function makeCall(idToCall,index) {
+        //var idToCall = document.getElementById('tocall').value;
+        console.log("peer: " + peer);
+
+        //start a call
+        var call = peer.call(idToCall, my_stream);
+        console.log("made a call: " + call);
+
+        //get remote stream
+        call.on('stream', function(remoteStream) {
+          console.log("Got remote stream");
+          var videoElement = document.getElementById(`video${index}`);
+          videoElement.srcObject = remoteStream;
+          videoElement.style.display = "block";
+        });
+
+      }
+
+    }
+
+    </script>
+
+</head>
+
+<body>
+  <img src="face.png" id='trackingImg'>
+  <!-- <p id='status'>Loading model...</p> -->
+
+
+  <div id="container1">
+    <video id="video1">
+    </video>
+  </div>
+
+  <div id="container2">
+    <video id="video2">
+    </video>
+  </div>
+
+
+  <audio id="drum1">
+    <source src="Drum1.wav" type="audio/wav">
+  </audio>
+
+  <audio id="drum2">
+    <source src="Drum2.wav" type="audio/wav">
+  </audio>
+
+  <audio id="drum3">
+    <source src="Drum3.wav" type="audio/wav">
+  </audio>
+
+  <audio id="drum4">
+    <source src="Drum4.wav" type="audio/wav">
+  </audio>
+
+  <audio id="drum5">
+    <source src="Drum5.wav" type="audio/wav">
+  </audio>
+
+  <audio id="drum6">
+    <source src="Drum6.wav" type="audio/wav">
+  </audio>
+
+  <audio id="shaker1">
+    <source src="Shaker1.wav" type="audio/wav">
+  </audio>
+
+  <audio id="shaker2">
+    <source src="Shaker2.wav" type="audio/wav">
+  </audio>
+
+  <audio id="shaker3">
+    <source src="Shaker3.wav" type="audio/wav">
+  </audio>
+
+  <audio id="shaker4">
+    <source src="Shaker4.wav" type="audio/wav">
+  </audio>
+
+  <audio id="shaker5">
+    <source src="Shaker5.wav" type="audio/wav">
+  </audio>
+
+  <audio id="shaker6">
+    <source src="Shaker6.wav" type="audio/wav">
+  </audio>
+
+  <audio id="lead1">
+    <source src="Lead1.wav" type="audio/wav">
+  </audio>
+
+  <audio id="lead2">
+    <source src="Lead2.wav" type="audio/wav">
+  </audio>
+
+  <audio id="lead3">
+    <source src="Lead3.wav" type="audio/wav">
+  </audio>
+
+  <audio id="lead4">
+    <source src="Lead4.wav" type="audio/wav">
+  </audio>
+
+  <audio id="lead5">
+    <source src="Lead5.wav" type="audio/wav">
+  </audio>
+
+  <audio id="lead6">
+    <source src="Lead6.wav" type="audio/wav">
+  </audio>
+
+  <script src="sketch3.js"></script>
+
+</body>
+
+</html>
